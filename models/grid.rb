@@ -30,10 +30,10 @@ class Grid
 
       positions = []
       case position
-        when 1 then size.times { |i| positions << @grid[[point_of_origin[0] + i][point_of_origin[1]] } # going up
-        when 2 then size.times { |i| positions << @grid[[point_of_origin[0] - i][point_of_origin[1]] } # going bottom
-        when 3 then size.times { |i| positions << @grid[point_of_origin[0][[point_of_origin[1] + i]] } #going right
-        when 4 then size.times { |i|positions << @grid[point_of_origin[0][[point_of_origin[1] - i]] } #going left
+        when 1 then size.times { |i| positions << @grid[point_of_origin[0] + i][point_of_origin[1]] } # going up
+        when 2 then size.times { |i| positions << @grid[point_of_origin[0] - i][point_of_origin[1]] } # going bottom
+        when 3 then size.times { |i| positions << @grid[point_of_origin[0][point_of_origin[1] + i]] }  #going right
+        when 4 then size.times { |i| positions << @grid[point_of_origin[0][point_of_origin[1] - i]] }  #going left
         overlap = !overlap(positions)
         if @grid[positions.last].present? && overlap
           true
@@ -51,18 +51,18 @@ class Grid
   def set_boat_1x4(point_of_origin, position)
     case position
       when 1 then 4.times { |i| @boat_1x4 << @grid[point_of_origin[0] + i][point_of_origin[1]] } #going up,
-      when 2 then 4.times { |i| @boat_1x4 << @grid[[point_of_origin[0] - i][point_of_origin[1]] }# going bottom
-      when 3 then 4.times { |i| @boat_1x4 << @grid[point_of_origin[0][[point_of_origin[1] + i]] }#going right
-      when 4 then 4.times { |i| @boat_1x4 << @grid[point_of_origin[0][[point_of_origin[1] - i]] }#going left
+      when 2 then 4.times { |i| @boat_1x4 << @grid[point_of_origin[0] - i][point_of_origin[1]] }# going bottom
+      when 3 then 4.times { |i| @boat_1x4 << @grid[point_of_origin[0][point_of_origin[1] + i]] }#going right
+      when 4 then 4.times { |i| @boat_1x4 << @grid[point_of_origin[0][point_of_origin[1] - i]] }#going left
     end
   end
 
   def set_boat_1x3(point_of_origin, position)
     case position
-      when 1 then 3.times  { |i| @boat_1x3 << @grid[i][point_of_origin[1]] } #going up
-      when 2 then 3.times  { |i| @boat_1x3 << @grid[-i][point_of_origin[1]] }# going bottom
-      when 3 then 3.times  { |i| @boat_1x3 << @grid[point_of_origin[0][i]] }#going right
-      when 4 then 3.times  { |i| @boat_1x3 << @grid[point_of_origin[0][-i]] }#going left
+      when 1 then 3.times  { |i| @boat_1x3 << @grid[point_of_origin[0] + i][point_of_origin[1]] } #going up
+      when 2 then 3.times  { |i| @boat_1x3 << @grid[point_of_origin[0] - i][point_of_origin[1]] }# going bottom
+      when 3 then 3.times  { |i| @boat_1x3 << @grid[point_of_origin[0][point_of_origin[1] + i]] } #going right
+      when 4 then 3.times  { |i| @boat_1x3 << @grid[point_of_origin[0][point_of_origin[1] - i]] } #going left
     end
   end
 
