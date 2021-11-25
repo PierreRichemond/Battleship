@@ -1,8 +1,18 @@
 require_relative "controllers/players_controller.rb"
+require_relative "models/grid.rb"
+require_relative "models/player.rb"
 
 class App
   def initialize
-    @controller = PlayersController.new
+
+
+    @grid_player_1 = Grid.new
+    @player_1 = Player.new(grid_player_1)
+    @grid_player_2 = Grid.new
+    @player_2 = Player.new(grid_player_2)
+    @player_1.change_active_state
+    @player = @player_1
+    @controller = PlayersController.new(@player_1, @player_2)
     @running = true
     run
   end
@@ -13,7 +23,7 @@ class App
     puts "Place your 2 boats on the board (4x1 and 3x1)."
     puts "Horizontal or vertical position only."
      puts "
-          　___1____2____3____4___5___
+           ___1____2____3____4____5___
         1 |   。　　。　　。　　。　　。　｜
         2 |   。　　。　　。　　。　　。　｜
         3 |   。　　。　　。　　。　　。　｜
@@ -26,12 +36,13 @@ class App
     puts "           --           "
 
     while @running
-      @current_user = @sessions_controller.log_in
-      while @current_user
         display_tasks
         action = gets.chomp.to_i
         route_action(action)
-      end
+        if action == 1 || action == 2
+          Player.switch_active_states
+          @player = Player.current_player
+        end
     end
   end
 
@@ -58,7 +69,7 @@ class App
     puts ""
     puts "What do you want to do next?"
     puts "1 - Place your boats"
-    puts "2 - Target a location"
+    puts "2 - Target a location, also display where you previously hit"
     puts "3 - Check where you opponent targeted"
     puts "4 - Check the state of your boats"
 
