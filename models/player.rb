@@ -1,5 +1,6 @@
 class Player
 
+
   def initialize(grid)
     @grid = grid
     @active = false

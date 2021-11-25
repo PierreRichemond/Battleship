@@ -10,28 +10,33 @@ class PlayersController
     @player = Player.current_player
     @opponent = Player.opponent
 
-    @p_1_boat_1x4 = @player_1.grid.boat_1x4
-    @p_1_boat_1x3 = @player_1.grid.boat_1x3
-    @p_2_boat_1x4 = @player_2.grid.boat_1x4
-    @p_2_boat_1x3 = @player_2.grid.boat_1x3
-    @shots = [] # shot current_player aim on the ennemy board
-    @hits = []
-    @has_been_shot = [] # passive hit, received on your board
-    @has_been_hit = []
+    # @p_1_boat_1x4 = @player_1.grid.boat_1x4
+    # @p_1_boat_1x3 = @player_1.grid.boat_1x3
+    # @p_2_boat_1x4 = @player_2.grid.boat_1x4
+    # @p_2_boat_1x3 = @player_2.grid.boat_1x3
+    # @shots = [] # shot current_player aim on the ennemy board
+    # @hits = []
+    # @has_been_shot = [] # passive hit, received on your board
+    # @has_been_hit = []
   end
 
   def place_your_boats
-    2.times { place_your_boat }
+    place_your_boat(3)
+    place_your_boat(4)
   end
 
-  def place_your_boat
+  def place_your_boat(length)
     @players_view.display_map
+    @players_view.set_boat("1 x #{length}")
     x = @players_view.x - 1 # player select 1 but it's actually index 0
     y = @players_view.y - 1 #
     point_of_origin = [x, y] # create the Point of origin with the coordinates
     direction = @players_view.ask_for(direction) #right, left, up, bottom
-    boolean = grid.can_position(point_of_origin, direction) # check if the boat has enough room
+    boolean = grid.can_position?(point_of_origin, direction, length) # check if the boat has enough room
                                                               # to go on the specific direction
+    if boolean
+      @player.grid.set_boat_1xlength(point_of_origin, direction) # DOESN'T SEEMS TO WORK HERE !!!!
+    end
     @players_view.can_position(boolean) # let the user know if he can put it there
                                         # and give hime the locations of his boat with coordinates
   end
