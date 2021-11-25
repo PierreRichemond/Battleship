@@ -32,7 +32,7 @@ class PlayersController
     y = @players_view.y - 1 #
     point_of_origin = [x, y] # create the Point of origin with the coordinates
     direction = @players_view.ask_for(direction) #right, left, up, bottom
-    boolean = grid.can_position?(point_of_origin, direction, length) # check if the boat has enough room
+    boolean = @player.grid.can_position?(point_of_origin, direction, length) # check if the boat has enough room
                                                               # to go on the specific direction
     if boolean
       @player.grid.set_boat_1xlength(point_of_origin, direction) # DOESN'T SEEMS TO WORK HERE !!!!
@@ -63,5 +63,4 @@ class PlayersController
     @players_view.result # if true say you touch something, if false, Plouf
     end
   end
-
 end
