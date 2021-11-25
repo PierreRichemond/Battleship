@@ -25,48 +25,50 @@ class Grid
     [false, false, false, false, false]
   ]
 
-  def can_position?(point_of_origin, position, size)
+  def can_position?(point_of_origin, direction, size)
     if @grid.includes?(point_of_origin)
-
-      positions = []
-      case position
-        when 1 then size.times { |i| positions << @grid[point_of_origin[0] + i][point_of_origin[1]] } # going up
-        when 2 then size.times { |i| positions << @grid[point_of_origin[0] - i][point_of_origin[1]] } # going bottom
-        when 3 then size.times { |i| positions << @grid[point_of_origin[0][point_of_origin[1] + i]] }  #going right
-        when 4 then size.times { |i| positions << @grid[point_of_origin[0][point_of_origin[1] - i]] }  #going left
-        overlap = !overlap(positions)
-        if @grid[positions.last].present? && overlap
-          true
+      positions = [] #list of each points of a single boat
+      case direction
+        when 1 then size.times { |i| positions << @grid[point_of_origin[0] + i][point_of_origin[1]] } #going up
+        when 2 then size.times { |i| positions << @grid[point_of_origin[0] - i][point_of_origin[1]] } #going bottom
+        when 3 then size.times { |i| positions << @grid[point_of_origin[0][point_of_origin[1] + i]] } #going right
+        when 4 then size.times { |i| positions << @grid[point_of_origin[0][point_of_origin[1] - i]] } #going left
+        overlap = overlap?(positions)
+        if @grid[positions.last].present? && !overlap #check if the coordinates are valid and if it overlaps another boat
+          true # can position ok
         else
-          false
+          false # can't position
         end
       else
         puts "Please press 1, 2, 3, 4"
       end
     else
-      false
+      false# can't position
     end
   end
 
-  def set_boat_1x4(point_of_origin, position)
-    case position
-      when 1 then 4.times { |i| @boat_1x4 << @grid[point_of_origin[0] + i][point_of_origin[1]] } #going up,
-      when 2 then 4.times { |i| @boat_1x4 << @grid[point_of_origin[0] - i][point_of_origin[1]] }# going bottom
-      when 3 then 4.times { |i| @boat_1x4 << @grid[point_of_origin[0][point_of_origin[1] + i]] }#going right
-      when 4 then 4.times { |i| @boat_1x4 << @grid[point_of_origin[0][point_of_origin[1] - i]] }#going left
+  def set_boat_1x4(point_of_origin, direction)
+    case direction
+      when 1 then 4.times { |i| @boat_1x4 << @grid[point_of_origin[0] + i][point_of_origin[1]] } #going up
+      when 2 then 4.times { |i| @boat_1x4 << @grid[point_of_origin[0] - i][point_of_origin[1]] } #going bottom
+      when 3 then 4.times { |i| @boat_1x4 << @grid[point_of_origin[0][point_of_origin[1] + i]] } #going right
+      when 4 then 4.times { |i| @boat_1x4 << @grid[point_of_origin[0][point_of_origin[1] - i]] } #going left
     end
+    @boat_1x4
   end
 
-  def set_boat_1x3(point_of_origin, position)
-    case position
+  def set_boat_1x3(point_of_origin, direction)
+    case direction
       when 1 then 3.times  { |i| @boat_1x3 << @grid[point_of_origin[0] + i][point_of_origin[1]] } #going up
-      when 2 then 3.times  { |i| @boat_1x3 << @grid[point_of_origin[0] - i][point_of_origin[1]] }# going bottom
+      when 2 then 3.times  { |i| @boat_1x3 << @grid[point_of_origin[0] - i][point_of_origin[1]] } #going bottom
       when 3 then 3.times  { |i| @boat_1x3 << @grid[point_of_origin[0][point_of_origin[1] + i]] } #going right
       when 4 then 3.times  { |i| @boat_1x3 << @grid[point_of_origin[0][point_of_origin[1] - i]] } #going left
     end
+    @boat_1x3
   end
 
-  def overlap(array_of_pins) # check if the second boat you overlaps the first
+  def overlap?(array_of_pins) # check if the second boat you overlaps the first
+    # return true if overlap
   end
 
   def boats_state

@@ -7,8 +7,7 @@ class PlayersController
     @players_view = PlayersView.new
     @player_1 = player_1
     @player_2 = player_2
-    @player = Player.current_player
-    @opponent = Player.opponent
+
 
     # @p_1_boat_1x4 = @player_1.grid.boat_1x4
     # @p_1_boat_1x3 = @player_1.grid.boat_1x3
@@ -55,12 +54,7 @@ class PlayersController
   end
 
   def my_boats_states # check if your boats are damaged
-    if player_1.current_user
-      @player.grid.my_boats_states
-
-    @players_view.display_map_with_previous_hits(@shots, @hits)
-    @point_of_origin = @players_view.ask_for(hit_location)
-    @players_view.result # if true say you touch something, if false, Plouf
-    end
+    my_boats = @player.grid.my_boats_states # return an array like this [[boat1 true or false][boat2 true or false for each pins]]
+    @players_view.display_boats_status(my_boats)
   end
 end
