@@ -16,15 +16,8 @@ class Player
     @boats = attributes[:boats]
     @boats = []
     @name = attributes[:name]
-    # @active = false
   end
-  # grid = [
-  #   [[1, 1], [1, 2], [1, 3], [1, 4], [1, 5]],
-  #   [[2, 1], [2, 2], [2, 3], [2, 4], [2, 5]],
-  #   [[3, 1], [3, 2], [3, 3], [3, 4], [3, 5]],
-  #   [[4, 1], [4, 2], [4, 3], [4, 4], [4, 5]],
-  #   [[5, 1], [5, 2], [5, 3], [5, 4], [5, 5]]
-  # ]
+
         #    ___1____2____3____4____5___
         # 1 |   。　　。 true　true　true |
         # 2 |  true　。　　。　　。　　。  ｜
@@ -48,13 +41,11 @@ class Player
       boat = []
       print positions
       positions.each do |locations|
-        locations.each do |location|
-          if !@grid[location[0]][location[1]].nil? && !boat_overlap #check if the coordinates are valid and if it overlaps another boat
+          if !@grid[locations[0]][locations[1]].nil? && !boat_overlap #check if the coordinates are valid and if it overlaps another boat
             boat << true                                            # if boat present, case is true so overlap true
           else
             boat << false
           end
-        end
       end
       boat.length != 1 && boat.uniq.length == 1 && boat[0] == true
     else
@@ -74,24 +65,18 @@ class Player
     @boats << boat
   end
 
-  def boat_overlap?(array_of_locations_on_the_board)
-    boat = []
-    print "boat_overlap"
-    array_of_locations_on_the_board.each do |locations|
-      locations.each do |location|
-        if @grid[location[0]][location[1]] == false # if true or nil / case doesn't exist like [0, 6]
-          boat << false                             # if boat present, case is true so overlap true
-        else
-          boat << true
-        end
-      end
+  def boat_overlap?(boat_pins)
+    boat_pins.each do |locations| # boat_pins = [[1,2], [1, 3], [1, 4]]
+     position = @grid[locations[0]][locations[1]]
+     return true if locations[0] < 0 || locations[1] < 0
+     return true if position.nil?   # out of bounds
+     return true if position == true  # overlap check
     end
-    available_spots = boat.uniq.length == 1 && boat[0] == false #available_spots returns true for available condition
-    !available_spots                                            # need the opposite for overlap
+    false                            # need the opposite for overlap
   end
 
-  def set_up_boats_on_grid(array_of_locations_on_the_board)# turn the false to true on the board where
-    array_of_locations_on_the_board.each do |locations|
+  def set_up_boats_on_grid(boat_pins)# turn the false to true on the board where
+    boat_pins.each do |locations|
       locations.each do |location|
         @grid[location[0]][location[1]] = true
       end
@@ -99,11 +84,7 @@ class Player
   end
 
   def my_boats_states
-    #true if you touch something
-  end
-
-  def add_hit(hit_point) #hit_point is an array like this [1, 3]
-
+    #tells the user if his boats are intact / damaged / sinked
   end
 
   def has_been_shot

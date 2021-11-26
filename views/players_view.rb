@@ -1,14 +1,14 @@
 require "pry"
 
 class PlayersView
-  def x
+  def y
     puts "Select the point from you will place your boat, you will be asked for a direction later"
-        puts "first get the horizontal location, select a number on the top from 1 to 5"
+        puts "Get the vertical location, select a number on the top from 1 to 5"
         gets.chomp
   end
 
-  def y
-    puts "then get the vertical location, select a number on the left from 1 to 5"
+  def x
+    puts "Get the Horizontal location, select a number on the left from 1 to 5"
     gets.chomp
   end
 

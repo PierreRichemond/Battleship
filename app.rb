@@ -3,11 +3,11 @@ require_relative "models/player.rb"
 
 class App
   def initialize
-
     @player_1 = Player.new()
     @player_2 = Player.new()
     @controller = PlayersController.new(@player_1, @player_2)
     @running = true
+    run
   end
 
   def run
@@ -38,7 +38,7 @@ class App
     @controller.place_your_boats
     @controller.switch_player
     while @running
-      puts "Your turn #{@player.name}"
+      puts "Your turn #{@controller.player_name}"
         display_tasks
         action = gets.chomp.to_i
         route_action(action)
@@ -62,7 +62,7 @@ class App
 
     when 0 then stop
     else
-      puts "Please press 1, 2, 3, 4 or 0"
+      puts "Please press 1, 2, 3 or 0"
     end
   end
 
@@ -77,4 +77,4 @@ class App
   end
 end
 
-App.new.run
+App.new
