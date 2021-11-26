@@ -1,10 +1,21 @@
-class Player
-  attr_reader :name, :boat
+require "pry"
 
-  def initialize(grid)
-    @grid = grid
+class Player
+  attr_accessor :name
+  attr_reader :boats, :grid
+
+  def initialize(attributes = {})
+    @grid = attributes[:grid]
+    @grid = [
+    [false, false, false, false, false],
+    [false, false, false, false, false],
+    [false, false, false, false, false],
+    [false, false, false, false, false],
+    [false, false, false, false, false]
+  ]
+    @boats = attributes[:boats]
+    @boats = []
     @name = attributes[:name]
-    @boat = attributes[:boat]
     # @active = false
   end
   # grid = [
@@ -16,70 +27,88 @@ class Player
   # ]
         #    ___1____2____3____4____5___
         # 1 |   。　　。 true　true　true |
-        # 2 |  true　　。　　。　　。　　。 ｜
-        # 3 |  true　　。　　。　　。　　。 ｜
-        # 4 |  true　　。　　。　　。　　。 ｜
-        # 5 |  true　　。　　。　　。　　。 ｜
+        # 2 |  true　。　　。　　。　　。  ｜
+        # 3 |  true　。　　。　　。　　。  ｜
+        # 4 |  true　。　　。　　。　　。  ｜
+        # 5 |  true　。　　。　　。　　。  ｜
         # 　｜＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿ ｜
-  @grid = [
-    [false, false, false, false, false],
-    [false, false, false, false, false],
-    [false, false, false, false, false],
-    [false, false, false, false, false],
-    [false, false, false, false, false]
-  ]
 
-  def can_position?(point_of_origin, direction, size)
-    if @grid.includes?(point_of_origin)
+  def does_boat_can_be_placed?(point_of_origin, direction, length)
+    if !@grid[point_of_origin[0]][point_of_origin[1]].nil?
       positions = [] #list of each points of a single boat
       case direction
-        when 1 then size.times { |i| positions << @grid[point_of_origin[0] + i][point_of_origin[1]] } #going up
-        when 2 then size.times { |i| positions << @grid[point_of_origin[0] - i][point_of_origin[1]] } #going bottom
-        when 3 then size.times { |i| positions << @grid[point_of_origin[0][point_of_origin[1] + i]] } #going right
-        when 4 then size.times { |i| positions << @grid[point_of_origin[0][point_of_origin[1] - i]] } #going left
-        boat_overlap = boat_overlap?(positions)
-        if @grid[positions.last].present? && !boat_overlap #check if the coordinates are valid and if it overlaps another boat
-          true # can position ok
-        else
-          false # can't position
-        end
+        when 1 then length.times { |i| positions << [[point_of_origin[0] - i], [point_of_origin[1]]].flatten } #going up
+        when 2 then length.times { |i| positions << [[point_of_origin[0] + i], [point_of_origin[1]]].flatten } #going bottom
+        when 3 then length.times { |i| positions << [[point_of_origin[0], [point_of_origin[1] + i]]].flatten } #going right
+        when 4 then length.times { |i| positions << [[point_of_origin[0], [point_of_origin[1] - i]]].flatten } #going left
       else
         puts "Please press 1, 2, 3, 4"
       end
+      boat_overlap = boat_overlap?(positions)
+      boat = []
+      print positions
+      positions.each do |locations|
+        locations.each do |location|
+          if !@grid[location[0]][location[1]].nil? && !boat_overlap #check if the coordinates are valid and if it overlaps another boat
+            boat << true                                            # if boat present, case is true so overlap true
+          else
+            boat << false
+          end
+        end
+      end
+      boat.length != 1 && boat.uniq.length == 1 && boat[0] == true
     else
-      false # can't position
+      puts "Try again, Place your boat within the grid"
     end
   end
 
-  def set_boat_1x4(point_of_origin, direction)
-    boat_1x4 = []
+  def set_boat(point_of_origin, direction, length)
+    boat = []
     case direction
-      when 1 then 4.times { |i| boat_1x4 << @grid[point_of_origin[0] + i][point_of_origin[1]] } #going up
-      when 2 then 4.times { |i| boat_1x4 << @grid[point_of_origin[0] - i][point_of_origin[1]] } #going bottom
-      when 3 then 4.times { |i| boat_1x4 << @grid[point_of_origin[0][point_of_origin[1] + i]] } #going right
-      when 4 then 4.times { |i| boat_1x4 << @grid[point_of_origin[0][point_of_origin[1] - i]] } #going left
+      when 1 then length.times { |i| boat << [[point_of_origin[0] - i], [point_of_origin[1]]].flatten } #going up
+      when 2 then length.times { |i| boat << [[point_of_origin[0] + i], [point_of_origin[1]]].flatten } #going bottom
+      when 3 then length.times { |i| boat << [[point_of_origin[0], [point_of_origin[1] + i]]].flatten } #going right
+      when 4 then length.times { |i| boat << [[point_of_origin[0], [point_of_origin[1] - i]]].flatten } #going left
     end
-    boat << boat_1x4
+    set_up_boats_on_grid(boat)
+    @boats << boat
   end
 
-  def set_boat_1x3(point_of_origin, direction)
-    boat_1x3 = []
-    case direction
-      when 1 then 3.times  { |i| @boat_1x3 << grid[point_of_origin[0] + i][point_of_origin[1]] } #going up
-      when 2 then 3.times  { |i| @boat_1x3 << grid[point_of_origin[0] - i][point_of_origin[1]] } #going bottom
-      when 3 then 3.times  { |i| @boat_1x3 << grid[point_of_origin[0][point_of_origin[1] + i]] } #going right
-      when 4 then 3.times  { |i| @boat_1x3 << grid[point_of_origin[0][point_of_origin[1] - i]] } #going left
+  def boat_overlap?(array_of_locations_on_the_board)
+    boat = []
+    print "boat_overlap"
+    array_of_locations_on_the_board.each do |locations|
+      locations.each do |location|
+        if @grid[location[0]][location[1]] == false # if true or nil / case doesn't exist like [0, 6]
+          boat << false                             # if boat present, case is true so overlap true
+        else
+          boat << true
+        end
+      end
     end
-    boat << boat_1x3
+    available_spots = boat.uniq.length == 1 && boat[0] == false #available_spots returns true for available condition
+    !available_spots                                            # need the opposite for overlap
   end
 
-  def boat_overlap?(array_of_pins) # check if the second boat you overlaps the first
-    # return true if overlap
+  def set_up_boats_on_grid(array_of_locations_on_the_board)# turn the false to true on the board where
+    array_of_locations_on_the_board.each do |locations|
+      locations.each do |location|
+        @grid[location[0]][location[1]] = true
+      end
+    end
   end
 
-  def boats_state
+  def my_boats_states
     #true if you touch something
   end
+
   def add_hit(hit_point) #hit_point is an array like this [1, 3]
+
+  end
+
+  def has_been_shot
+  end
+
+  def has_been_hit
   end
 end

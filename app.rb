@@ -1,17 +1,13 @@
 require_relative "controllers/players_controller.rb"
-require_relative "models/grid.rb"
 require_relative "models/player.rb"
 
 class App
   def initialize
-    @grid_player_1 = Grid.new
-    @player_1 = Player.new(@grid_player_1)
-    @grid_player_2 = Grid.new
-    @player_2 = Player.new(@grid_player_2)
-    @player = @player_1
+
+    @player_1 = Player.new()
+    @player_2 = Player.new()
     @controller = PlayersController.new(@player_1, @player_2)
     @running = true
-    run
   end
 
   def run
@@ -31,26 +27,28 @@ class App
     puts "Try to touch your opponent's boat then sink it before he/she sinks yours."
     puts "Good luck & Have fun."
     puts "           --           "
-
+    puts "Enter the name of the first player"
+    @player_1.name = gets.chomp
+    puts "Enter the name of the second player"
+    @player_2.name = gets.chomp
+    puts "#{@player_1.name}, place your boats"
+    @controller.place_your_boats
+    @controller.switch_player
+    puts "#{@player_2.name}, place your boats."
+    @controller.place_your_boats
+    @controller.switch_player
     while @running
+      puts "Your turn #{@player.name}"
         display_tasks
         action = gets.chomp.to_i
         route_action(action)
-        if action == 1 || action == 2
-          switch_player
+        if action == 1
+          @controller.switch_player
         end
     end
   end
 
   private
-
-  def switch_player
-    if @player == @grid_player_2
-      @player = @grid_player_1
-    else
-      @player = @grid_player_2
-    end
-  end
 
   def stop
     @running = false
@@ -58,10 +56,9 @@ class App
 
   def route_action(action)
     case action
-    when 1 then @controller.place_your_boats
-    when 2 then @controller.target_location
-    when 3 then @controller.targeted_location
-    when 4 then @controller.my_boats_states
+    when 1 then @controller.target_a_location
+    when 2 then @controller.check_targeted_location
+    when 3 then @controller.my_boats_states
 
     when 0 then stop
     else
@@ -72,13 +69,12 @@ class App
   def display_tasks
     puts ""
     puts "What do you want to do next?"
-    puts "1 - Place your boats"
-    puts "2 - Target a location, also display where you previously hit"
-    puts "3 - Check where you opponent targeted"
-    puts "4 - Check the state of your boats"
+    puts "1 - Target a location, also display where you previously hit"
+    puts "2 - Check where you opponent targeted"
+    puts "3 - Check the state of your boats"
 
     puts "0 - Stop and exit the program"
   end
 end
 
-App.new
+App.new.run

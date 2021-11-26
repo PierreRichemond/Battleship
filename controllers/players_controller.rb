@@ -1,27 +1,21 @@
 require_relative "../views/players_view.rb"
 require_relative "../models/player.rb"
-require_relative "../models/grid.rb"
+require "pry"
 
 class PlayersController
   def initialize(player_1, player_2)
     @players_view = PlayersView.new
+    @player = player_1
     @player_1 = player_1
     @player_2 = player_2
 
-
-    # @p_1_boat_1x4 = @player_1.grid.boat_1x4
-    # @p_1_boat_1x3 = @player_1.grid.boat_1x3
-    # @p_2_boat_1x4 = @player_2.grid.boat_1x4
-    # @p_2_boat_1x3 = @player_2.grid.boat_1x3
-    # @shots = [] # shot current_player aim on the ennemy board
-    # @hits = []
-    # @has_been_shot = [] # passive hit, received on your board
-    # @has_been_hit = []
   end
 
   def place_your_boats
     place_your_boat(3)
     place_your_boat(4)
+    @players_view.display_boats_status(@player.boats)
+    @players_view.turn(@player.name)
   end
 
   def place_your_boat(length)
@@ -30,17 +24,20 @@ class PlayersController
     x = @players_view.x.to_i - 1 # player select 1 but it's actually index 0
     y = @players_view.y.to_i - 1 #
     point_of_origin = [x, y] # create the Point of origin with the coordinates
-    direction = @players_view.ask_for_position #right, left, up, bottom
-    boolean = @player.grid.can_position?(point_of_origin, direction, length) # check if the boat has enough room
+    direction = @players_view.ask_for_position.to_i #right, left, up, bottom
+    boat_can_be_placed = @player.does_boat_can_be_placed?(point_of_origin, direction, length) # check if the boat has enough room
                                                               # to go on the specific direction
-    if boolean
-      @player.grid.set_boat_1xlength(point_of_origin, direction) # DOESN'T SEEMS TO WORK HERE !!!!
+    @players_view.does_boat_can_be_placed(boat_can_be_placed)
+    if boat_can_be_placed
+      @player.set_boat(point_of_origin, direction, length)
+    else
+      place_your_boat(length)
     end
-    @players_view.can_position(boolean) # let the user know if he can put it there
-                                        # and give hime the locations of his boat with coordinates
+     # let the user know if he can put it there
+                                              # and give hime the locations of his boat with coordinates
   end
 
-  def target_location # aim on the ennemy board
+  def target_a_location # aim on the ennemy board
     @players_view.display_map_with_previous_hits(@shots, @hits)
     @point_of_origin = @players_view.ask_for(hit_location)
     @player.grid.add_hit(location)
@@ -48,7 +45,7 @@ class PlayersController
   end
 
   def check_targeted_location # received on your board
-    @players_view.display_map_with_previous_hits(@has_been_shot, @has_been_hit)
+    @players_view.display_map_with_previous_hits(@player.has_been_shot, @player.has_been_hit)
     @point_of_origin = @players_view.ask_for(hit_location)
     @player.grid.boats_state # if true say you touch something, if false, Plouf
   end
@@ -56,5 +53,13 @@ class PlayersController
   def my_boats_states # check if your boats are damaged
     my_boats = @player.grid.my_boats_states # return an array like this [[boat1 true or false][boat2 true or false for each pins]]
     @players_view.display_boats_status(my_boats)
+  end
+
+  def switch_player
+    if @player == @player_2
+      @player = @player_1
+    else
+      @player = @player_2
+    end
   end
 end

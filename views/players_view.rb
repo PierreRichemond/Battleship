@@ -1,3 +1,5 @@
+require "pry"
+
 class PlayersView
   def x
     puts "Select the point from you will place your boat, you will be asked for a direction later"
@@ -22,13 +24,17 @@ class PlayersView
   def ask_for_position
     puts "What is the direction from the point of origin?"
     puts "1 - Up"
-    puts "2 - Bottom"
+    puts "2 - Bot"
     puts "3 - Right"
     puts "4 - Left"
     gets.chomp
   end
 
-  def can_position(boolean)
+  def turn(name)
+    puts "#{name}'s turn!"
+  end
+
+  def does_boat_can_be_placed(boolean)
     if boolean
       puts "👏 Your boat is on the board"
     else
@@ -47,13 +53,18 @@ class PlayersView
   end
 
   def display_map
- puts "
-           ＿＿1＿＿2＿＿＿3＿＿4＿＿＿5＿
+    puts "
+           ＿＿1＿＿2＿＿ 3＿＿4＿＿ 5＿
         1 |   。　　。　　。　　。　　。　｜
         2 |   。　　。　　。　　。　　。　｜
         3 |   。　　。　　。　　。　　。　｜
         4 |   。　　。　　。　　。　　。　｜
         5 |   。　　。　　。　　。　　。　｜
-        　｜＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿｜"
+        　｜＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿ ｜"
+  end
+
+  def display_map_with_previous_hits(has_been_shot, has_been_hit)
+    display_map
+
   end
 end
