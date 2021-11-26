@@ -27,10 +27,10 @@ class PlayersController
   def place_your_boat(length)
     @players_view.display_map
     @players_view.set_boat("1 x #{length}")
-    x = @players_view.x - 1 # player select 1 but it's actually index 0
-    y = @players_view.y - 1 #
+    x = @players_view.x.to_i - 1 # player select 1 but it's actually index 0
+    y = @players_view.y.to_i - 1 #
     point_of_origin = [x, y] # create the Point of origin with the coordinates
-    direction = @players_view.ask_for(direction) #right, left, up, bottom
+    direction = @players_view.ask_for_position #right, left, up, bottom
     boolean = @player.grid.can_position?(point_of_origin, direction, length) # check if the boat has enough room
                                                               # to go on the specific direction
     if boolean
