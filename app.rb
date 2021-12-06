@@ -22,7 +22,7 @@ class App
         3 |   。　　。　　。　　。　　。　｜
         4 |   。　　。　　。　　。　　。　｜
         5 |   。　　。　　。　　。　　。　｜
-        　｜＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿｜"
+        　｜＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿ ｜"
     puts "Players will switch turns."
     puts "Try to touch your opponent's boat then sink it before he/she sinks yours."
     puts "Good luck & Have fun."
@@ -34,16 +34,25 @@ class App
     puts "#{@player_1.name}, place your boats"
     @controller.place_your_boats
     @controller.switch_player
+    @controller.switch_opponent
+
     puts "#{@player_2.name}, place your boats."
     @controller.place_your_boats
     @controller.switch_player
+    @controller.switch_opponent
     while @running
       puts "Your turn #{@controller.player_name}"
         display_tasks
         action = gets.chomp.to_i
         route_action(action)
         if action == 1
+          if @controller.win?
+              display_options
+              choice = gets.chomp.to_i
+              play_again(choice) # or quit
+          end
           @controller.switch_player
+          @controller.switch_opponent
         end
     end
   end
@@ -75,6 +84,21 @@ class App
 
     puts "0 - Stop and exit the program"
   end
-end
 
+  def play_again(action)
+    case action
+      when 1 then run
+      when 2 then stop
+    else
+      puts "Please press 1 or 2"
+    end
+  end
+
+  def display_options
+    puts ""
+    puts "What do you want to do next?"
+    puts "1 - Play again"
+    puts "2 - Stop and exit the program"
+  end
+end
 App.new

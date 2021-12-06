@@ -2,7 +2,6 @@ require "pry"
 
 class PlayersView
   def y
-    puts "Select the point from you will place your boat, you will be asked for a direction later"
         puts "Get the vertical location, select a number on the top from 1 to 5"
         gets.chomp
   end
@@ -12,13 +11,15 @@ class PlayersView
     gets.chomp
   end
 
+
   def ask_for(something)
     puts "What is the #{something}?"
     gets.chomp
   end
 
   def set_boat(size)
-    puts "set up the boat de size 1 by #{size}"
+    puts "Select the point from you will place your boat, you will be asked for a direction later"
+    puts "set up the boat size 1 by #{size}"
   end
 
   def ask_for_position
@@ -44,11 +45,8 @@ class PlayersView
 
   def display_boats_status(array_of_boats)
     array_of_boats.each do |boat|
-      puts "boat-size: 1 x #{boat.size}"
-      text = boat.each do |location| #true or false
-        location ? "-damaged-" : "-undamaged-"
-      end
-      print text
+      p "Boat size: 1 x #{boat.size}"
+      p boat
     end
   end
 
@@ -63,8 +61,28 @@ class PlayersView
         　｜＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿ ｜"
   end
 
-  def display_map_with_previous_hits(has_been_shot, has_been_hit)
+  def display_map_with_previous_hits(opponent_shots, player_shots, opponent_boats_states)
     display_map
+    opponent_shots.each do |shot|
+      puts "Opponent's shots"
+      puts shot
+    end
+    player_shots.each do |shot|
+      puts "your shots"
+      puts shot
+    end
+    opponent_boats_states.each do |boat|
+      puts "ennemi's boats"
+      puts boat
+    end
 
+  end
+
+  def result
+
+  end
+
+  def target
+    puts "Target one spot on the grid"
   end
 end
