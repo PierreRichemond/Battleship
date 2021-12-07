@@ -106,7 +106,6 @@ class Player
       boats << 'sink' if matches.uniq.length == 1 && matches[0] == true
       boats << 'intact' if matches.uniq.length == 1 && matches[0] == false
     end
-    # return ["hit, sinked"]
     boats
   end
 

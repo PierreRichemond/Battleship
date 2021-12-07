@@ -20,7 +20,7 @@ class PlayersController
     @players_view.display_map
     @players_view.set_boat("1 x #{length}")
     y = @players_view.y.to_i - 1 # player select 1 but it's actually index 0
-    x = @players_view.x.to_i - 1 #
+    x = @players_view.x.to_i - 1
     if (y.negative? || x.negative?) || (y >= 5 || x >= 5)
       puts "Point of origin Out of bounds"
       place_your_boat(length)
@@ -30,7 +30,7 @@ class PlayersController
     boat_can_be_placed = @player.does_boat_can_be_placed?(point_of_origin, direction, length) # check if the boat has enough room
                                                               # to go on the specific direction
     @players_view.does_boat_can_be_placed(boat_can_be_placed) # let the user know if he can put it there
-    if boat_can_be_placed  # and give hime the locations of his boat with coordinates
+    if boat_can_be_placed # and give hime the locations of his boat with coordinates
       @player.set_boat(point_of_origin, direction, length)# set boat on the board, turn false positions to true
     else
       place_your_boat(length) # recursion
