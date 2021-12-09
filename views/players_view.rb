@@ -4,7 +4,6 @@ class PlayersView
   def y
         puts "Get the vertical location, select a number on the top from 0 to 4"
         gets.chomp
-
   end
 
   def x
