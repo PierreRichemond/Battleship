@@ -4,15 +4,13 @@ class PlayersView
   def y
         puts "Get the vertical location, select a number on the top from 0 to 4"
         gets.chomp
-        puts ""
+
   end
 
   def x
     puts "Get the Horizontal location, select a number on the left from 0 to 4"
     gets.chomp
-    puts ""
   end
-
 
   def ask_for(something)
     puts "What is the #{something}?"
