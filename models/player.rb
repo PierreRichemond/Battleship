@@ -2,7 +2,7 @@ require "pry"
 
 class Player
   attr_accessor :name
-  attr_reader :boats, :grid, :shots, :win
+  attr_reader :boats, :grid, :shots, :win, :hit_by_location
 
   def initialize(attributes = {})
     @grid = attributes[:grid]
@@ -20,7 +20,8 @@ class Player
     @shots = []
     @win = attributes[:win]
     @win = false
-
+    @hit_by_location = attributes[:hit_by_location]
+    @hit_by_location = []
   end
 
         #    ___1____2____3____4____5___
@@ -44,10 +45,10 @@ class Player
       end
       boat_overlap = boat_overlap?(positions) # return true if boat overlaps an other one or is out of bound
       boat = []
-      print positions # print in the view, add a +1 to the index for better understanding on the board
+      print positions
       positions.each do |locations|
         if !@grid[locations[0]][locations[1]].nil? && !boat_overlap #check if the coordinates are valid and if it overlaps another boat
-          boat << true   # if boat present, case is true so overlap true
+          boat << true # if boat present, case is true so overlap true
         else
           boat << false
         end
@@ -59,18 +60,6 @@ class Player
     end
   end
 
-  def set_boat(point_of_origin, direction, length)
-    boat = []
-    case direction
-      when 1 then length.times { |i| boat << [[point_of_origin[0] - i], [point_of_origin[1]]].flatten } #going up
-      when 2 then length.times { |i| boat << [[point_of_origin[0] + i], [point_of_origin[1]]].flatten } #going bottom
-      when 3 then length.times { |i| boat << [[point_of_origin[0], [point_of_origin[1] + i]]].flatten } #going right
-      when 4 then length.times { |i| boat << [[point_of_origin[0], [point_of_origin[1] - i]]].flatten } #going left
-    end # refacto array instead of flatten   [point_of_origin[0] - i, point_of_origin[1]]
-    set_up_boats_on_grid(boat)
-    @boats << boat
-  end
-
   def boat_overlap?(boat_pins)
     boat_pins.each do |locations| # boat_pins = [[1,2], [1, 3], [1, 4]]
       return true if locations[0].negative? || locations[1].negative? # out of bound
@@ -79,37 +68,45 @@ class Player
       return true if position.nil? # out of bounds
       return true if position == true # overlap check
     end
-    false                            # need the opposite for overlap
+    false
+  end
+
+  def set_boat(point_of_origin, direction, length) # create boats position on the board
+    boat = []
+    case direction
+      when 1 then length.times { |i| boat << [[point_of_origin[0] - i], [point_of_origin[1]]].flatten } #going up
+      when 2 then length.times { |i| boat << [[point_of_origin[0] + i], [point_of_origin[1]]].flatten } #going bottom
+      when 3 then length.times { |i| boat << [[point_of_origin[0], [point_of_origin[1] + i]]].flatten } #going right
+      when 4 then length.times { |i| boat << [[point_of_origin[0], [point_of_origin[1] - i]]].flatten } #going left
+    end
+    set_up_boats_on_grid(boat) # place boat on the board
+    @boats << boat
   end
 
   def set_up_boats_on_grid(boat_pins)# turn the false to true on the board where
-    boat_pins.each do |locations|
+    boat_pins.each do |locations| # place boat on the board
       locations.each do |location|
         @grid[location[0]][location[1]] = true
       end
     end
   end
 
-  def my_boats_states
-    #tells the user if his boats are intact / damaged / sinked
-    boats = [] # //["hit, sinked"]
-    @boats.each do |boat|
-      matches = []
-
-      shots.each do |shot|
-        matches << false if @grid[shot[0]][shot[1]] == false
-        if @grid[shot[0]][shot[1]] == true
-          boats << "hit on #{shot}"
-          matches << true
-        end
-      end
-      boats << 'sink' if matches.uniq.length == 1 && matches[0] == true
-      boats << 'intact' if matches.uniq.length == 1 && matches[0] == false
-    end
-    boats
+  def shot(location) #store the position the player attacks
+    @shots << location
   end
 
-  def shot(location) #attack
-    @shots << location
+  def hit_or_sink(location) #tells after shoting weither a boat is hit or sunk
+    state = "Hit the water :("
+    @boats.each do |boat|
+      boat.each_with_index do |spot, index|
+        if spot == location
+          boat[index] = "Hit!"
+          state = "Hit!"
+          @hit_by_location << spot
+        end
+        state = "~~~~~ Yeah, Sinked one boat !!!!!" if boat.select {|is_hit| is_hit == "Hit!"}.length == boat.length
+      end
+    end
+    state
   end
 end

@@ -2,13 +2,15 @@ require "pry"
 
 class PlayersView
   def y
-        puts "Get the vertical location, select a number on the top from 1 to 5"
+        puts "Get the vertical location, select a number on the top from 0 to 4"
         gets.chomp
+        puts ""
   end
 
   def x
-    puts "Get the Horizontal location, select a number on the left from 1 to 5"
+    puts "Get the Horizontal location, select a number on the left from 0 to 4"
     gets.chomp
+    puts ""
   end
 
 
@@ -46,40 +48,31 @@ class PlayersView
   def display_boats_status(array_of_boats)
     array_of_boats.each do |boat|
       p "Boat size: 1 x #{boat.size}"
-      p boat
+      puts "#{boat}"
     end
   end
 
   def display_map
     puts "
-           ＿＿1＿＿2＿＿ 3＿＿4＿＿ 5＿
+           ＿＿0＿＿1＿＿ 2＿＿3＿＿ 4＿
+        0 |   。　　。　　。　　。　　。　｜
         1 |   。　　。　　。　　。　　。　｜
         2 |   。　　。　　。　　。　　。　｜
         3 |   。　　。　　。　　。　　。　｜
         4 |   。　　。　　。　　。　　。　｜
-        5 |   。　　。　　。　　。　　。　｜
         　｜＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿ ｜"
   end
 
-  def display_map_with_previous_hits(opponent_shots, player_shots, opponent_boats_states)
-    display_map
-    opponent_shots.each do |shot|
-      puts "Opponent's shots"
-      puts shot
-    end
-    player_shots.each do |shot|
-      puts "your shots"
-      puts shot
-    end
-    opponent_boats_states.each do |boat|
-      puts "ennemi's boats"
-      puts boat
-    end
-
-  end
-
-  def result
-
+  def result(location, shots, hit_by_location, boats)
+    puts ""
+    puts "targeted location :#{location}"
+    puts "Where I Shot before:"
+    puts "#{shots}"
+    puts "Where I Hit Opponent's boat:"
+    puts "#{hit_by_location}"
+    puts "your boats location"
+    puts "#{boats}"
+    puts ""
   end
 
   def target
