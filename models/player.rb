@@ -48,13 +48,12 @@ class Player
       print positions
       positions.each do |locations|
         if !@grid[locations[0]][locations[1]].nil? && !boat_overlap #check if the coordinates are valid and if it overlaps another boat
-          boat << true # if boat present, case is true so overlap true
+          boat << true # case is true when doesnt overlap
         else
           boat << false
         end
       end
-      boat.length != 1 && boat.uniq.length == 1 && boat[0] == true
-      # boat.length != 1 useless
+      boat.uniq.length == 1 && boat[0] == true
     else
       puts "Try again, Place your boat within the grid"
     end
@@ -63,10 +62,10 @@ class Player
   def boat_overlap?(boat_pins)
     boat_pins.each do |locations| # boat_pins = [[1,2], [1, 3], [1, 4]]
       return true if locations[0].negative? || locations[1].negative? # out of bound
-
       position = @grid[locations[0]][locations[1]]
       return true if position.nil? # out of bounds
       return true if position == true # overlap check
+
     end
     false
   end
@@ -85,9 +84,7 @@ class Player
 
   def set_up_boats_on_grid(boat_pins)# turn the false to true on the board where
     boat_pins.each do |locations| # place boat on the board
-      locations.each do |location|
-        @grid[location[0]][location[1]] = true
-      end
+      @grid[locations[0]][locations[1]] = true
     end
   end
 
