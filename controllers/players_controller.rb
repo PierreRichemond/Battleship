@@ -14,13 +14,11 @@ class PlayersController
   def place_your_boats
     place_your_boat(3)
     place_your_boat(4)
-    @players_view.display_boats_status(@player.boats)
     @players_view.turn(@opponent.name)
     switch_players
   end
 
   def place_your_boat(length)
-    @players_view.display_map
     @players_view.set_boat("1 x #{length}")
     y = @players_view.y.to_i # player select 1 but it's actually index 0
     x = @players_view.x.to_i
@@ -37,6 +35,7 @@ class PlayersController
     else
       place_your_boat(length) # recursion
     end
+    @players_view.display_map(@player.boats)
   end
 
   def target_a_location # aim on the ennemy board
@@ -67,10 +66,6 @@ class PlayersController
 
   def player_name # called from the controller
     @player.name
-  end
-
-  def hit_by_location
-    @player.boats
   end
 
   def win?

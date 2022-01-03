@@ -54,7 +54,6 @@ class App
         @controller.switch_players
       end
     end
-
   end
 
   private
