@@ -1,4 +1,4 @@
-# Boat war
+# Battleship
 
 ## Rules
 It is a 2 player games, players play in turns.<br>
