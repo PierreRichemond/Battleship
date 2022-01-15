@@ -11,9 +11,7 @@ class PlayersController
     @opponent = @player2
   end
 
-  def place_your_boats
-    place_your_boat(3)
-    place_your_boat(4)
+  def change_player_name
     @players_view.turn(@opponent.name)
     switch_players
   end
@@ -78,6 +76,7 @@ class PlayersController
         end
       end
     return true if count == 7
+
     false
   end
 end

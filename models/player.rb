@@ -1,12 +1,11 @@
 require "pry"
 
 class Player
-  attr_accessor :name
-  attr_reader :boats, :grid, :shots, :win, :hit_by_location
+  attr_accessor :name, :grid
+  attr_reader :boats, :shots, :win, :hit_by_location
 
   def initialize(attributes = {})
-    @grid = attributes[:grid]
-    @grid = [
+    @grid = attributes[:grid] || [
     [false, false, false, false, false],
     [false, false, false, false, false],
     [false, false, false, false, false],
@@ -24,14 +23,6 @@ class Player
     @hit_by_location = []
   end
 
-        #    ___1____2____3____4____5___
-        # 1 |   。　　。 true　true　true |
-        # 2 |  true　。　　。　　。　　。  ｜
-        # 3 |  true　。　　。　　。　　。  ｜
-        # 4 |  true　。　　。　　。　　。  ｜
-        # 5 |  true　。　　。　　。　　。  ｜
-        # 　｜＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿ ｜
-
   def does_boat_can_be_placed?(point_of_origin, direction, length)
     if !@grid[point_of_origin[0]][point_of_origin[1]].nil? # grid[1][6] = nil  [-5 ==> -1] nil
       positions = [] #list of each points of a single boat
@@ -43,31 +34,35 @@ class Player
         else
         puts "Please press 1, 2, 3, 4"
       end
-      boat_overlap = boat_overlap?(positions) # return true if boat overlaps an other one or is out of bound
+      can_place_boat = can_place_boat?(positions) # return true if boat overlaps an other one or is out of bound
       boat = []
       print positions
       positions.each do |locations|
-        if !@grid[locations[0]][locations[1]].nil? && !boat_overlap #check if the coordinates are valid and if it overlaps another boat
+        if !@grid[locations[0]][locations[1]].nil? && can_place_boat #check if the coordinates are valid and if it overlaps another boat
           boat << true # case is true when doesnt overlap
         else
           boat << false
         end
       end
-      boat.uniq.length == 1 && boat[0] == true
+      boat.all?(true)
     else
       puts "Try again, Place your boat within the grid"
     end
   end
 
-  def boat_overlap?(boat_pins)
-    boat_pins.each do |locations| # boat_pins = [[1,2], [1, 3], [1, 4]]
-      return true if locations[0].negative? || locations[1].negative? # out of bound
-      position = @grid[locations[0]][locations[1]]
-      return true if position.nil? # out of bounds
-      return true if position == true # overlap check
-
+  def can_place_boat?(boat_pins)
+    list_of_condition = []
+    boat_pins.each do |location| # boat_pins = [[1,2], [1, 3], [1, 4]]
+      if !@grid[location[0]].nil? && !@grid[location[0]][location[1]].nil?
+        list_of_condition << false if location[0].negative? || location[1].negative? # out of bound
+        list_of_condition << false if location[0] >= 6 || location[1] >= 7
+        position = @grid[location[0]][location[1]]
+        position == false ? list_of_condition << true : list_of_condition << false  # overlap check
+      else
+        list_of_condition << false
+      end
     end
-    false
+    list_of_condition.all?(true)
   end
 
   def set_boat(point_of_origin, direction, length) # create boats position on the board
