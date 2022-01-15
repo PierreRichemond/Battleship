@@ -24,7 +24,7 @@ class Player
   end
 
   def does_boat_can_be_placed?(point_of_origin, direction, length)
-    if !@grid[point_of_origin[0]][point_of_origin[1]].nil? # grid[1][6] = nil  [-5 ==> -1] nil
+    if !@grid[point_of_origin[0]].nil? && !@grid[point_of_origin[0]][point_of_origin[1]].nil? # grid[1][6] = nil  [-5 ==> -1] nil
       positions = [] #list of each points of a single boat
       case direction
         when 1 then length.times { |i| positions << [[point_of_origin[0] - i], [point_of_origin[1]]].flatten } #going up
@@ -36,7 +36,6 @@ class Player
       end
       can_place_boat = can_place_boat?(positions) # return true if boat overlaps an other one or is out of bound
       boat = []
-      print positions
       positions.each do |locations|
         if !@grid[locations[0]][locations[1]].nil? && can_place_boat #check if the coordinates are valid and if it overlaps another boat
           boat << true # case is true when doesnt overlap
@@ -46,7 +45,7 @@ class Player
       end
       boat.all?(true)
     else
-      puts "Try again, Place your boat within the grid"
+      false
     end
   end
 

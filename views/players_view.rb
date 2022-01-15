@@ -39,6 +39,7 @@ class PlayersView
       puts "👏 Your boat is on the board"
     else
       puts "❌ Change the position of the boat"
+      puts "Try again, Place your boat within the grid"
     end
   end
 
