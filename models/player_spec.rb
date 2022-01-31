@@ -1,9 +1,9 @@
 require_relative "player.rb"
 
 RSpec.describe Player do
-  describe '#does_boat_can_be_placed?' do
+  describe '#is_spot_available_on_the_grid?' do
 
-    subject { player.does_boat_can_be_placed?(point_of_origin, direction, length) }
+    subject { player.is_spot_available_on_the_grid?(point_of_origin, direction, length) }
 
     # direction :
     # 1 ==>   Up
@@ -241,13 +241,11 @@ RSpec.describe Player do
 
 
   describe '#can_place_boat?' do
-
     subject { player.can_place_boat?(boat_pins) }
 
     let(:player) do
       Player.new(grid: grid_content)
     end
-
 
     context 'when place first boat' do
       context 'when a boat of lenght 3 horizontally within the board limit' do
@@ -375,6 +373,108 @@ RSpec.describe Player do
         let(:boat_pins) { [[3, 2], [2, 2], [1, 2], [0, 2]] }
 
         it { expect(subject).to be_falsy }
+      end
+    end
+  end
+
+  describe '#hit_or_sink?' do
+    subject { player.hit_or_sink(location) }
+    let(:player) do
+      Player.new(grid: grid_content,
+        boats: [[[0, 0], [0, 1], [0, 2]], [[4, 4], [3, 4], [2, 4], [1, 4]]] )
+    end
+
+    context 'Hit the water! :(' do
+      context 'when it miss on the right of the first boat' do
+        let(:grid_content) do
+          [
+            [true, true, true, false, false],
+            [false, false, false, false, true],
+            [false, false, false, false, true],
+            [false, false, false, false, true],
+            [false, false, false, false, true]
+          ]
+        end
+        let(:location) { [[0, 1], [0, 2], [0, 3]] }
+
+        it { expect(subject).to eq("Hit the water :(") }
+      end
+
+      context 'when it miss on the a complete random location' do
+        let(:grid_content) do
+          [
+            [true, true, true, false, false],
+            [false, false, false, false, true],
+            [false, false, false, false, true],
+            [false, false, false, false, true],
+            [false, false, false, false, true]
+          ]
+        end
+        let(:location) { [[0, 1], [0, 2], [2, 3]] }
+
+        it { expect(subject).to eq("Hit the water :(") }
+      end
+
+      context 'when it miss on the a complete random location when already sunk a boat' do
+        let(:grid_content) do
+          [
+            [true, true, true, false, false],
+            [false, false, false, false, true],
+            [false, false, false, false, true],
+            [false, false, false, false, true],
+            [false, false, false, false, true]
+          ]
+        end
+        let(:location) { [[0, 0], [0, 1], [0, 2], [2, 3]] }
+
+        it { expect(subject).to eq("Hit the water :(") }
+      end
+    end
+
+    context 'Hit!' do
+      context 'when target the second boat for the first time after targeting the first boat 2 times' do
+        let(:grid_content) do
+          [
+            [true, true, true, false, false],
+            [false, false, false, false, true],
+            [false, false, false, false, true],
+            [false, false, false, false, true],
+            [false, false, false, false, true]
+          ]
+        end
+        let(:location) { [[0, 1], [0, 2], [4, 4]] }
+
+        it { expect(subject).to eq("Hit!") }
+      end
+
+      context 'a boat for the first time after 2 shots in the water' do
+        let(:grid_content) do
+          [
+            [true, true, true, false, false],
+            [false, false, false, false, true],
+            [false, false, false, false, true],
+            [false, false, false, false, true],
+            [false, false, false, false, true]
+          ]
+        end
+        let(:location) { [[0, 4], [2, 2], [0, 0]] }
+
+        it { expect(subject).to eq("Hit!") }
+      end
+
+      context 'when hitting a boat for the second time' do
+        let(:grid_content) do
+          [
+            [true, true, true, false, false],
+            [false, false, false, false, true],
+            [false, false, false, false, true],
+            [false, false, false, false, true],
+            [false, false, false, false, true]
+          ]
+        end
+        let(:location) { [[2, 2], [0, 0], [0, 1]] }
+
+        it { expect(subject).to eq("Hit!") }
       end
     end
   end

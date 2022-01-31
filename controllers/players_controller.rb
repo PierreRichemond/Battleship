@@ -25,8 +25,8 @@ class PlayersController
       place_your_boat(length)
     end
     point_of_origin = [y, x] # create the Point of origin with the coordinates
-    direction = @players_view.ask_for_position.to_i #right, left, up, bottom                                                       # to go on the specific direction
-    boat_can_be_placed = @player.does_boat_can_be_placed?(point_of_origin, direction, length) # check if the boat has enough room
+    direction = @players_view.ask_for_position #right, left, up, bottom                                                       # to go on the specific direction
+    boat_can_be_placed = @player.is_spot_available_on_the_grid?(point_of_origin, direction, length) # check if the boat has enough room
     @players_view.does_boat_can_be_placed(boat_can_be_placed) # let the user know if he can put it there
     if boat_can_be_placed # and give hime the locations of his boat with coordinates
       @player.set_boat(point_of_origin, direction, length)# set boat on the board, turn false positions to true

@@ -27,7 +27,13 @@ class PlayersView
     puts "2 - Bot"
     puts "3 - Right"
     puts "4 - Left"
-    gets.chomp
+    choice = gets.chomp.to_i
+    unless [1, 2, 3, 4].include?(choice)
+      puts "Please press 1, 2, 3, 4"
+      ask_for_position
+    else
+      choice
+    end
   end
 
   def turn(name)

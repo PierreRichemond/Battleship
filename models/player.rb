@@ -1,8 +1,8 @@
 require "pry"
 
 class Player
-  attr_accessor :name, :grid
-  attr_reader :boats, :shots, :win, :hit_by_location
+  attr_accessor :name, :grid, :boats
+  attr_reader :shots, :win, :hit_by_location
 
   def initialize(attributes = {})
     @grid = attributes[:grid] || [
@@ -12,8 +12,7 @@ class Player
     [false, false, false, false, false],
     [false, false, false, false, false]
   ]
-    @boats = attributes[:boats]
-    @boats = []
+    @boats = attributes[:boats] || []
     @name = attributes[:name]
     @shots = attributes[:shots]
     @shots = []
@@ -23,7 +22,7 @@ class Player
     @hit_by_location = []
   end
 
-  def does_boat_can_be_placed?(point_of_origin, direction, length)
+  def is_spot_available_on_the_grid?(point_of_origin, direction, length)
     if !@grid[point_of_origin[0]].nil? && !@grid[point_of_origin[0]][point_of_origin[1]].nil? # grid[1][6] = nil  [-5 ==> -1] nil
       positions = [] #list of each points of a single boat
       case direction
@@ -31,8 +30,6 @@ class Player
         when 2 then length.times { |i| positions << [[point_of_origin[0] + i], [point_of_origin[1]]].flatten } #going bottom
         when 3 then length.times { |i| positions << [[point_of_origin[0], [point_of_origin[1] + i]]].flatten } #going right
         when 4 then length.times { |i| positions << [[point_of_origin[0], [point_of_origin[1] - i]]].flatten } #going left
-        else
-        puts "Please press 1, 2, 3, 4"
       end
       can_place_boat = can_place_boat?(positions) # return true if boat overlaps an other one or is out of bound
       boat = []
@@ -87,15 +84,15 @@ class Player
   end
 
   def hit_or_sink(location) #tells after shoting weither a boat is hit or sunk
-    state = "Hit the water :("
+    state = 'Hit the water :('
     @boats.each do |boat|
       boat.each_with_index do |spot, index|
-        if spot == location
+        if location == spot
           boat[index] = "Hit!"
-          state = "Hit!"
           @hit_by_location << spot
+          state = "Hit!"
+          return "Hit! ~~~~~ Yeah, Sinked one boat !!!!!" if boat.all("Hit!")
         end
-        state = "~~~~~ Yeah, Sinked one boat !!!!!" if boat.select {|is_hit| is_hit == "Hit!"}.length == boat.length
       end
     end
     state
