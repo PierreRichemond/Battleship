@@ -69,14 +69,8 @@ class PlayersController
   def win?
     count = 0
       @opponent.boats.each do |boat|
-        boat.each do |location| #[1, 2]
-          @player.shots.each do |shot| #[1, 2]
-            count += 1 if shot == location #compare player shots location with the opponent boat's location
-          end
-        end
+        count += 1 if boat.all?("Hit!")
       end
-    return true if count == 7
-
-    false
+    count == 2 ? true : false
   end
 end

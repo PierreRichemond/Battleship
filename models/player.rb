@@ -14,12 +14,9 @@ class Player
   ]
     @boats = attributes[:boats] || []
     @name = attributes[:name]
-    @shots = attributes[:shots]
-    @shots = []
-    @win = attributes[:win]
-    @win = false
-    @hit_by_location = attributes[:hit_by_location]
-    @hit_by_location = []
+    @shots = attributes[:shots] || []
+    @win = attributes[:win] || false
+    @hit_by_location = attributes[:hit_by_location] || []
   end
 
   def is_spot_available_on_the_grid?(point_of_origin, direction, length)
