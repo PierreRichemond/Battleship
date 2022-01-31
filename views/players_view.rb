@@ -11,6 +11,10 @@ class PlayersView
     gets.chomp
   end
 
+  def out_of_bound(location)
+    puts "#{location} Out of bounds"
+  end
+
   def ask_for(something)
     puts "What is the #{something}?"
     gets.chomp

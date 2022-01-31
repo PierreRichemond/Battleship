@@ -21,7 +21,7 @@ class PlayersController
     y = @players_view.y.to_i # player select 1 but it's actually index 0
     x = @players_view.x.to_i
     if (y.negative? || x.negative?) || (y >= 5 || x >= 5)
-      puts "Point of origin Out of bounds"
+      @view.out_of_bound([y, x])
       place_your_boat(length)
     end
     point_of_origin = [y, x] # create the Point of origin with the coordinates
@@ -41,12 +41,12 @@ class PlayersController
     y = @players_view.y.to_i # player select 1 but it's actually index 0
     x = @players_view.x.to_i #
     if (y.negative? || x.negative?) || (y >= 5 || x >= 5)
-      puts "Point of origin Out of bounds"
+      @view.out_of_bound([y, x])
       target_a_location
     end
     location = [y, x]
     @player.shot(location)
-    hit_state = @opponent.hit_or_sink(location)
+    hit_state = @opponent.hit_miss_or_sink(location)
     puts hit_state
     @opponent.hit_by_location
     @players_view.result(location, @opponent.shots, @player.hit_by_location, @opponent.boats) # if true say you touch something, if false, Plouf

@@ -377,8 +377,8 @@ RSpec.describe Player do
     end
   end
 
-  describe '#hit_or_sink?' do
-    subject { player.hit_or_sink(location) }
+  describe '#hit_miss_or_sink?' do
+    subject { player.hit_miss_or_sink(location) }
     let(:player) do
       Player.new(grid: grid_content,
         boats: [[[0, 0], [0, 1], [0, 2]], [[4, 4], [3, 4], [2, 4], [1, 4]]] )
@@ -396,6 +396,10 @@ RSpec.describe Player do
           ]
         end
         let(:location) { [0, 3] }
+        let(:player) do
+          Player.new(grid: grid_content,
+          boats: [[[0, 0], 'Hit!', 'Hit!'], [[4, 4], [3, 4], [2, 4], [1, 4]]] )
+        end
 
         it { expect(subject).to eq("Hit the water :(") }
       end
@@ -411,6 +415,10 @@ RSpec.describe Player do
           ]
         end
         let(:location) { [2, 3] }
+        let(:player) do
+          Player.new(grid: grid_content,
+          boats: [[[0, 0], 'Hit!', 'Hit!'], [[4, 4], [3, 4], [2, 4], [1, 4]]] )
+        end
 
         it { expect(subject).to eq("Hit the water :(") }
       end
@@ -426,7 +434,10 @@ RSpec.describe Player do
           ]
         end
         let(:location) { [2, 3] }
-
+        let(:player) do
+          Player.new(grid: grid_content,
+          boats: [['Hit!', 'Hit!', 'Hit!'], [[4, 4], [3, 4], [2, 4], [1, 4]]] )
+        end
         it { expect(subject).to eq("Hit the water :(") }
       end
     end
@@ -443,6 +454,10 @@ RSpec.describe Player do
           ]
         end
         let(:location) { [4, 4] }
+        let(:player) do
+          Player.new(grid: grid_content,
+          boats: [[[0 ,0], 'Hit!', 'Hit!'], [[4, 4], [3, 4], [2, 4], [1, 4]]] )
+        end
 
         it { expect(subject).to eq("Hit!") }
       end
@@ -458,7 +473,10 @@ RSpec.describe Player do
           ]
         end
         let(:location) { [0, 0] }
-
+        let(:player) do
+          Player.new(grid: grid_content,
+          boats: [[[0 ,0], [0 ,1], [0 ,2]], [[4, 4], [3, 4], [2, 4], [1, 4]]] )
+        end
         it { expect(subject).to eq("Hit!") }
       end
 
@@ -473,7 +491,10 @@ RSpec.describe Player do
           ]
         end
         let(:location) { [0, 1] }
-
+        let(:player) do
+          Player.new(grid: grid_content,
+          boats: [['Hit!', [0 ,1], [0 ,2]], [[4, 4], [3, 4], [2, 4], [1, 4]]] )
+        end
         it { expect(subject).to eq("Hit!") }
       end
 
@@ -488,7 +509,11 @@ RSpec.describe Player do
           ]
         end
         let(:location) { [4, 4] }
+        let(:player) do
+          Player.new(grid: grid_content,
+          boats: [['Hit!', 'Hit!', 'Hit!'], [[4, 4], [3, 4], [2, 4], [1, 4]]] )
 
+        end
         it { expect(subject).to eq("Hit!") }
       end
 
@@ -503,7 +528,10 @@ RSpec.describe Player do
           ]
         end
         let(:location) { [0, 0] }
-
+        let(:player) do
+          Player.new(grid: grid_content,
+          boats: [[[0 ,0], [0 ,1], [0 ,2]], ['Hit!', 'Hit!', 'Hit!', 'Hit!']] )
+        end
         it { expect(subject).to eq("Hit!") }
       end
     end
@@ -520,7 +548,10 @@ RSpec.describe Player do
           ]
         end
         let(:location) { [0, 0] }
-
+        let(:player) do
+          Player.new(grid: grid_content,
+          boats: [[[0, 0], "Hit!", "Hit!"], [[4, 4], [3, 4], [2, 4], [1, 4]]] )
+        end
         it { expect(subject).to eq("Hit! ~~~~~ Yeah, Sinked one boat !!!!!") }
       end
 
@@ -535,7 +566,10 @@ RSpec.describe Player do
           ]
         end
         let(:location) { [0, 2] }
-
+        let(:player) do
+          Player.new(grid: grid_content,
+          boats: [["Hit!", "Hit!", [0, 2]], [[4, 4], "Hit!", "Hit!", [1, 4]]] )
+        end
         it { expect(subject).to eq("Hit! ~~~~~ Yeah, Sinked one boat !!!!!") }
       end
     end

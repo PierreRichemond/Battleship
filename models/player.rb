@@ -83,7 +83,7 @@ class Player
     @shots << location
   end
 
-  def hit_or_sink(location) #tells after shoting weither a boat is hit or sunk
+  def hit_miss_or_sink(location) #tells after shoting weither a boat is hit or sunk
     state = 'Hit the water :('
     @boats.each do |boat|
       boat.each_with_index do |spot, index|
