@@ -388,14 +388,14 @@ RSpec.describe Player do
       context 'when it miss on the right of the first boat' do
         let(:grid_content) do
           [
-            [true, true, true, false, false],
+            [true, 'Hit!', 'Hit!', false, false],
             [false, false, false, false, true],
             [false, false, false, false, true],
             [false, false, false, false, true],
             [false, false, false, false, true]
           ]
         end
-        let(:location) { [[0, 1], [0, 2], [0, 3]] }
+        let(:location) { [0, 3] }
 
         it { expect(subject).to eq("Hit the water :(") }
       end
@@ -403,14 +403,14 @@ RSpec.describe Player do
       context 'when it miss on the a complete random location' do
         let(:grid_content) do
           [
-            [true, true, true, false, false],
+            [true, "Hit!", "Hit!", false, false],
             [false, false, false, false, true],
             [false, false, false, false, true],
             [false, false, false, false, true],
             [false, false, false, false, true]
           ]
         end
-        let(:location) { [[0, 1], [0, 2], [2, 3]] }
+        let(:location) { [2, 3] }
 
         it { expect(subject).to eq("Hit the water :(") }
       end
@@ -418,14 +418,14 @@ RSpec.describe Player do
       context 'when it miss on the a complete random location when already sunk a boat' do
         let(:grid_content) do
           [
-            [true, true, true, false, false],
+            ["Hit!", "Hit!", "Hit!", false, false],
             [false, false, false, false, true],
             [false, false, false, false, true],
             [false, false, false, false, true],
             [false, false, false, false, true]
           ]
         end
-        let(:location) { [[0, 0], [0, 1], [0, 2], [2, 3]] }
+        let(:location) { [2, 3] }
 
         it { expect(subject).to eq("Hit the water :(") }
       end
@@ -435,19 +435,19 @@ RSpec.describe Player do
       context 'when target the second boat for the first time after targeting the first boat 2 times' do
         let(:grid_content) do
           [
-            [true, true, true, false, false],
+            [true, "Hit!", "Hit!", false, false],
             [false, false, false, false, true],
             [false, false, false, false, true],
             [false, false, false, false, true],
             [false, false, false, false, true]
           ]
         end
-        let(:location) { [[0, 1], [0, 2], [4, 4]] }
+        let(:location) { [4, 4] }
 
         it { expect(subject).to eq("Hit!") }
       end
 
-      context 'a boat for the first time after 2 shots in the water' do
+      context 'a boat for the first time' do
         let(:grid_content) do
           [
             [true, true, true, false, false],
@@ -457,7 +457,7 @@ RSpec.describe Player do
             [false, false, false, false, true]
           ]
         end
-        let(:location) { [[0, 4], [2, 2], [0, 0]] }
+        let(:location) { [0, 0] }
 
         it { expect(subject).to eq("Hit!") }
       end
@@ -465,16 +465,78 @@ RSpec.describe Player do
       context 'when hitting a boat for the second time' do
         let(:grid_content) do
           [
-            [true, true, true, false, false],
+            ["Hit!", true, true, false, false],
             [false, false, false, false, true],
             [false, false, false, false, true],
             [false, false, false, false, true],
             [false, false, false, false, true]
           ]
         end
-        let(:location) { [[2, 2], [0, 0], [0, 1]] }
+        let(:location) { [0, 1] }
 
         it { expect(subject).to eq("Hit!") }
+      end
+
+      context 'hitting a boat after sinking the first one' do
+        let(:grid_content) do
+          [
+            ["Hit!", "Hit!", "Hit!", false, false],
+            [false, false, false, false, true],
+            [false, false, false, false, true],
+            [false, false, false, false, true],
+            [false, false, false, false, true]
+          ]
+        end
+        let(:location) { [4, 4] }
+
+        it { expect(subject).to eq("Hit!") }
+      end
+
+      context 'hitting the firs boat after sinking the second one' do
+        let(:grid_content) do
+          [
+            [false, false, false, false, false],
+            [false, false, false, false, "Hit!"],
+            [false, false, false, false, "Hit!"],
+            [false, false, false, false, "Hit!"],
+            [false, false, false, false, "Hit!"]
+          ]
+        end
+        let(:location) { [0, 0] }
+
+        it { expect(subject).to eq("Hit!") }
+      end
+    end
+
+    context 'Sink a boat' do
+      context 'finish the first boat in a row' do
+        let(:grid_content) do
+          [
+            [true, "Hit!", "Hit!", false, false],
+            [false, false, false, false, true],
+            [false, false, false, false, true],
+            [false, false, false, false, true],
+            [false, false, false, false, true]
+          ]
+        end
+        let(:location) { [0, 0] }
+
+        it { expect(subject).to eq("Hit! ~~~~~ Yeah, Sinked one boat !!!!!") }
+      end
+
+      context 'with shooting at the other one as an interruption' do
+        let(:grid_content) do
+          [
+            ["Hit!", "Hit!", true, false, false],
+            [false, false, false, false, true],
+            [false, false, false, false, "Hit!"],
+            [false, false, false, false, "Hit!"],
+            [false, false, false, false, true]
+          ]
+        end
+        let(:location) { [0, 2] }
+
+        it { expect(subject).to eq("Hit! ~~~~~ Yeah, Sinked one boat !!!!!") }
       end
     end
   end

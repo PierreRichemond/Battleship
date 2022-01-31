@@ -91,7 +91,7 @@ class Player
           boat[index] = "Hit!"
           @hit_by_location << spot
           state = "Hit!"
-          return "Hit! ~~~~~ Yeah, Sinked one boat !!!!!" if boat.all("Hit!")
+          return "Hit! ~~~~~ Yeah, Sinked one boat !!!!!" if boat.all?("Hit!")
         end
       end
     end
